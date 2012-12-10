@@ -41,10 +41,10 @@ class kibana (
   # resource alias is only usable for require
   # e.g. realize Package[tzinfo] doesn't work if 'tzinfo'
   # is an alias, see http://projects.puppetlabs.com/issues/4459
-  Package <| alias == 'json'      |>
-  Package <| alias == 'sinatra'   |>
-  Package <| alias == 'tzinfo'    |>
-  Package <| alias == 'fastercsv' |>
+  Package <| alias == 'ruby-json'      |>
+  Package <| alias == 'ruby-sinatra'   |>
+  Package <| alias == 'ruby-tzinfo'    |>
+  Package <| alias == 'ruby-fastercsv' |>
 
   user {$user:
     ensure => $ensure,
