@@ -56,8 +56,9 @@ class kibana (
 
     'git': {
       vcsrepo {$home:
-        ensure   => $git_revision,
+        ensure   => $ensure,
         provider => 'git',
+        revision => $git_revision,
         source   => 'git://github.com/rashidkpc/Kibana.git',
       }
     }
