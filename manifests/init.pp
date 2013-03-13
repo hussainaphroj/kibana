@@ -14,9 +14,8 @@ class kibana (
   $git_revision          = $kibana::params::git_revision,
   $elasticsearch_servers = $kibana::params::elasticsearch_servers,
   $elasticsearch_timeout = $kibana::params::elasticsearch_timeout,
+  $thin_servers          = $::physicalprocessorcount,
 ) inherits kibana::params {
-
-  include thin::params
 
   case $package_type {
 
@@ -84,7 +83,7 @@ class kibana (
     owner           => 'root',
     group           => 'root',
     content         => template('kibana/KibanaConfig.rb.erb'),
-    notify          => Service[$thin::params::service],
+    notify          => Service['thin'],
     require         => $kibana_provider ? {
       'git'         => Vcsrepo[$home],
       /package|gem/ => Package['kibana'],
@@ -98,6 +97,7 @@ class kibana (
     port    => $port,
     user    => $user,
     group   => $group,
+    servers => $thin_servers,
     rackup  => "${home}/config.ru",
     require => [
       Vcsrepo[$home], User[$user], File["${home}/KibanaConfig.rb"],
