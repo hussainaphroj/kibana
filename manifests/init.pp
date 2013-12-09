@@ -2,107 +2,49 @@
 #
 # This class installs Kibana
 #
+# === Parameters
+#
+# [*install_path*]
+#   Destination folder to install Kibana to. This folder must be shared by a
+#   web server.
+#
+# [*git_revision*]
+#   Revision on github to clone locally. Can be updated after a version is
+#   well tested.
+#
+# [*git_clone_path"]
+#   Kibana repository must be clone in an intermediate folder as only a
+#   subdirectory holds the Kibana application itself.
+#
+# [*elasticsearch_url*]
+#   Public URL of elasticsearch. This url must be accessible by client browsers
+#   that run Kibana.
+#
 class kibana (
-  $ensure                = $kibana::params::ensure,
-  $address               = $kibana::params::host,
-  $port                  = $kibana::params::port,
-  $home                  = $kibana::params::home,
-  $user                  = $kibana::params::user,
-  $group                 = $kibana::params::group,
-  $kibana_provider       = $kibana::params::kibana_provider,
-  $package_type          = $kibana::params::package_type,
-  $git_revision          = $kibana::params::git_revision,
-  $elasticsearch_servers = $kibana::params::elasticsearch_servers,
-  $elasticsearch_timeout = $kibana::params::elasticsearch_timeout,
-  $thin_servers          = $::physicalprocessorcount,
-) inherits kibana::params {
+  $install_path,
+  $git_revision      = 'v3.0.0milestone4',
+  $git_clone_path    = '/usr/src/kibana',
+  $elasticsearch_url = 'https://"+window.location.hostname+"/elasticsearch/',
+) {
 
-  case $package_type {
-
-    'gem': {
-      include ruby::gem::json
-      include ruby::gem::sinatra
-      include ruby::gem::tzinfo
-      include ruby::gem::fastercsv
-    }
-
-    'package': {
-      include ruby::package::json
-      include ruby::package::sinatra
-      include ruby::package::tzinfo
-      include ruby::package::fastercsv
-    }
-
-    default: { fail "Unsupported package type ${package_type}" }
-
+  vcsrepo {$git_clone_path:
+    ensure   => $ensure,
+    provider => 'git',
+    revision => $git_revision,
+    source   => 'git://github.com/elasticsearch/kibana.git',
   }
 
-  # resource alias is only usable for require
-  # e.g. realize Package[tzinfo] doesn't work if 'tzinfo'
-  # is an alias, see http://projects.puppetlabs.com/issues/4459
-  Package <| alias == 'ruby-json'      |>
-  Package <| alias == 'ruby-sinatra'   |>
-  Package <| alias == 'ruby-tzinfo'    |>
-  Package <| alias == 'ruby-fastercsv' |>
-
-  user {$user:
-    ensure => $ensure,
-    home   => $home,
-    system => true,
+  file {$install_path:
+    ensure   => directory,
+    source   => "file://${git_clone_path}/src",
+    recurse  => true,
+    force    => true,
+    require  => Vcsrepo[$git_clone_path],
   }
-
-  case $kibana_provider {
-
-    'git': {
-      vcsrepo {$home:
-        ensure   => $ensure,
-        provider => 'git',
-        revision => $git_revision,
-        source   => 'git://github.com/rashidkpc/Kibana.git',
-      }
-    }
-
-    'package': {
-      package{'kibana':
-        ensure => $ensure,
-      }
-    }
-
-    'gem': {
-      package{'kibana':
-        ensure   => $ensure,
-        provider => 'gem',
-      }
-    }
-
-    default: { fail "Unsupported kibana provider ${kibana_provider}" }
-  }
-
-  file {"${home}/KibanaConfig.rb":
-    ensure          => $ensure,
-    owner           => 'root',
-    group           => 'root',
-    content         => template('kibana/KibanaConfig.rb.erb'),
-    notify          => Service['thin'],
-    require         => $kibana_provider ? {
-      'git'         => Vcsrepo[$home],
-      /package|gem/ => Package['kibana'],
-    },
-  }
-
-  thin::app {'kibana':
-    ensure  => $ensure,
-    chdir   => $home,
-    address => $address,
-    port    => $port,
-    user    => $user,
-    group   => $group,
-    servers => $thin_servers,
-    rackup  => "${home}/config.ru",
-    require => [
-      Vcsrepo[$home], User[$user], File["${home}/KibanaConfig.rb"],
-      Package['json','sinatra','tzinfo','fastercsv'],
-    ],
+ 
+  file {"${install_path}config.js":
+    ensure  => present,
+    content => template("${module_name}/config.js.erb"),
   }
 
 }
