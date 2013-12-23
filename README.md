@@ -1,24 +1,20 @@
 # Kibana Puppet Module
 
-This module manages [Kibana](http://www.kibana.org) a highly scalable for [Logstash](http://logstash.net/) and [ElasticSearch](http://www.elasticsearch.org/).
+This module manages [Kibana](http://www.elasticsearch.org/overview/kibana/) a highly frontend scalable for [Logstash](http://logstash.net/) and [ElasticSearch](http://www.elasticsearch.org/).
+
+This module was heavily reworked for Kibana 3 which made of client side javascript only.
 
 ## Basic usage
 
-You can install kibana in different ways (see class parameter *kibana_provider*). For example directly from Github (default settings):
+You can install kibana in a directory shared by a web server:
 
-    include kibana
-
-This way, Ruby libs required by Kibana are installed with your package management system (yum, apt). 
-
-If you prefer to use gem packages (more Dev than Op :)), simply force class parameter *package_type* to 'gem': 
-
-    class {'kibana': package_type => 'gem'}
+    class {'::kibana':
+      install_path => '/var/www/html/kibana/',
+    }
 
 ## Dependencies
 
-This module depends on:
- 
- * [puppet-ruby](https://github.com/camptocamp/puppet-ruby) for the management of Ruby libraries
+None.
 
 ## Contributing
 
