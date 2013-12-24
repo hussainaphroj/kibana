@@ -22,13 +22,13 @@
 #
 class kibana (
   $install_path,
-  $git_revision      = 'v3.0.0milestone4',
+  $git_revision      = '0f16e1cc6184ed101e63106b4b386cebc3e92652',
   $git_clone_path    = '/usr/src/kibana',
   $elasticsearch_url = 'https://"+window.location.hostname+"/elasticsearch/',
+  $default_route     = '/dashboard/file/logstash.json',
 ) {
 
   vcsrepo {$git_clone_path:
-    ensure   => $ensure,
     provider => 'git',
     revision => $git_revision,
     source   => 'git://github.com/elasticsearch/kibana.git',
@@ -41,7 +41,7 @@ class kibana (
     force    => true,
     require  => Vcsrepo[$git_clone_path],
   }
- 
+
   file {"${install_path}config.js":
     ensure  => present,
     content => template("${module_name}/config.js.erb"),
