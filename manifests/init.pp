@@ -26,6 +26,22 @@ class kibana (
   $git_clone_path    = '/usr/src/kibana',
   $elasticsearch_url = 'https://"+window.location.hostname+"/elasticsearch/',
   $default_route     = '/dashboard/file/logstash.json',
+  $panels            = [
+    'bettermap',
+    'column',
+    'filtering',
+    'histogram',
+    'hits',
+    'map',
+    'query',
+    'sparklines',
+    'stats',
+    'table',
+    'terms',
+    'text',
+    'timepicker',
+    'trends'
+  ],
 ) {
 
   vcsrepo {$git_clone_path:
