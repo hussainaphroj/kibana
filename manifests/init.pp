@@ -22,7 +22,7 @@
 #
 class kibana (
   $install_path,
-  $git_revision      = '0f16e1cc6184ed101e63106b4b386cebc3e92652',
+  $git_revision      = '2c2a0aa58f450bcdb2c383a566a9947fcaca28a7',
   $git_clone_path    = '/usr/src/kibana',
   $elasticsearch_url = 'https://"+window.location.hostname+"/elasticsearch/',
   $default_route     = '/dashboard/file/logstash.json',
