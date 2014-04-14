@@ -8,3 +8,4 @@ description 'Kibana 3 Module for Puppet'
 project_page 'https://github.com/camptocamp/puppet-kibana'
 
 ## Add dependencies, if any:
+dependency 'puppetlabs/vcsrepo', '>=0.2.0'
