@@ -30,6 +30,7 @@ class kibana (
   $git_clone_path    = '/usr/src/kibana',
   $elasticsearch_url = 'https://"+window.location.hostname+"/elasticsearch/',
   $default_route     = '/dashboard/file/logstash.json',
+  $kibana_index      = 'kibana-int',
   $panels            = [
     'bettermap',
     'column',
