@@ -63,7 +63,7 @@ class kibana (
     require  => Vcsrepo[$git_clone_path],
   }
 
-  file {"${install_path}config.js":
+  file {"${install_path}/config.js":
     ensure  => present,
     content => template("${module_name}/config.js.erb"),
   }
