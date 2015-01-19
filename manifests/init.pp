@@ -56,11 +56,11 @@ class kibana (
   }
 
   file {$install_path:
-    ensure   => directory,
-    source   => "file://${git_clone_path}/src",
-    recurse  => true,
-    force    => true,
-    require  => Vcsrepo[$git_clone_path],
+    ensure  => directory,
+    source  => "file://${git_clone_path}/src",
+    recurse => true,
+    force   => true,
+    require => Vcsrepo[$git_clone_path],
   }
 
   file {"${install_path}config.js":
