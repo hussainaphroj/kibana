@@ -45,7 +45,7 @@ class kibana (
     'terms',
     'text',
     'timepicker',
-    'trends'
+    'trends',
   ],
 ) {
 
@@ -64,7 +64,7 @@ class kibana (
   }
 
   file {"${install_path}config.js":
-    ensure  => present,
+    ensure  => file,
     content => template("${module_name}/config.js.erb"),
   }
 
