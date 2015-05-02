@@ -1,0 +1,30 @@
+{
+  "name": "camptocamp-kibana",
+  "version": "1.0.2",
+  "author": "Camptocamp",
+  "summary": "Puppet Kibana module",
+  "license": "Apache-2.0",
+  "source": "https://github.com/camptocamp/puppet-kibana",
+  "project_page": "https://github.com/camptocamp/puppet-kibana",
+  "issues_url": "https://github.com/camptocamp/puppet-kibana/issues",
+  "dependencies": [
+
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": "3.x"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    }
+  ],
+  "puppet_version": [
+    "3.7"
+  ]
+}

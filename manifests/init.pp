@@ -31,6 +31,8 @@ class kibana (
   $elasticsearch_url = 'https://"+window.location.hostname+"/elasticsearch/',
   $default_route     = '/dashboard/file/logstash.json',
   $kibana_index      = 'kibana-int',
+  $owner             = undef,
+  $group             = undef,
   $panels            = [
     'bettermap',
     'column',
@@ -45,7 +47,7 @@ class kibana (
     'terms',
     'text',
     'timepicker',
-    'trends'
+    'trends',
   ],
 ) {
 
@@ -53,19 +55,25 @@ class kibana (
     provider => 'git',
     revision => $git_revision,
     source   => $git_repo,
+    owner    => $owner,
+    group    => $group,
   }
 
   file {$install_path:
-    ensure   => directory,
-    source   => "file://${git_clone_path}/src",
-    recurse  => true,
-    force    => true,
-    require  => Vcsrepo[$git_clone_path],
+    ensure  => directory,
+    source  => "file://${git_clone_path}/src",
+    recurse => true,
+    force   => true,
+    owner   => $owner,
+    group   => $group,
+    require => Vcsrepo[$git_clone_path],
   }
 
-  file {"${install_path}/config.js":
-    ensure  => present,
+  file {"${install_path}config.js":
+    ensure  => file,
     content => template("${module_name}/config.js.erb"),
+    owner   => $owner,
+    group   => $group,
   }
 
 }
